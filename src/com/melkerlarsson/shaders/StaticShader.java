@@ -4,6 +4,7 @@ import com.melkerlarsson.entities.Camera;
 import com.melkerlarsson.entities.Light;
 import com.melkerlarsson.toolBox.Maths;
 import org.lwjgl.util.vector.Matrix4f;
+import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
 public class StaticShader extends ShaderProgram{
@@ -20,6 +21,8 @@ public class StaticShader extends ShaderProgram{
     private int location_shineDamper;
     private int location_useFakeLighting;
     private int location_skyColor;
+    private int location_offset;
+    private int location_numberOfRows;
 
 
 
@@ -38,8 +41,8 @@ public class StaticShader extends ShaderProgram{
         location_shineDamper = super.getUniformLocation("shineDamper");
         location_useFakeLighting = super.getUniformLocation("useFakeLighting");
         location_skyColor = super.getUniformLocation("skyColor");
-
-
+        location_offset = super.getUniformLocation("offset");
+        location_numberOfRows = super.getUniformLocation("numberOfRows");
     }
 
     @Override
@@ -47,6 +50,14 @@ public class StaticShader extends ShaderProgram{
         super.bindAttribute(0, "position");
         super.bindAttribute(1, "textureCoords");
         super.bindAttribute(2, "normal");
+    }
+
+    public void loadNumberOfRows(int numberOfRows) {
+        super.loadFloat(location_numberOfRows, numberOfRows);
+    }
+
+    public void loadOffset(float x, float y) {
+        super.load2DVector(location_offset, new Vector2f(x, y));
     }
 
     public void loadSkyColor(float r, float g, float b) {
