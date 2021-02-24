@@ -4,6 +4,8 @@ import com.melkerlarsson.entities.Camera;
 import com.melkerlarsson.entities.Entity;
 import com.melkerlarsson.entities.Light;
 import com.melkerlarsson.entities.Player;
+import com.melkerlarsson.gui.GuiRenderer;
+import com.melkerlarsson.gui.GuiTexture;
 import com.melkerlarsson.models.TexturedModel;
 import com.melkerlarsson.objConverter.OBJFileLoader;
 import com.melkerlarsson.objConverter.ModelData;
@@ -14,6 +16,7 @@ import com.melkerlarsson.textures.ModelTexture;
 import com.melkerlarsson.textures.TerrainTexture;
 import com.melkerlarsson.textures.TerrainTexturePack;
 import org.lwjgl.opengl.Display;
+import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
 import java.util.ArrayList;
@@ -99,6 +102,12 @@ public class Main {
         Player player = new Player(texturedPlayer, new Vector3f(100, 0, -150), 0,0,0,1);
         Camera camera = new Camera(player);
 
+        List<GuiTexture> guis = new ArrayList<GuiTexture>();
+        GuiTexture gui = new GuiTexture(loader.loadTexture("whiteTexture"), new Vector2f(0.5f, 0.5f), new Vector2f(0.25f, 0.25f));
+        guis.add(gui);
+
+        GuiRenderer guiRenderer = new GuiRenderer(loader);
+
         while (!Display.isCloseRequested()) {
             player.move(terrain);
             camera.move();
@@ -111,8 +120,11 @@ public class Main {
             }
 
             renderer.render(light, camera);
+            guiRenderer.render(guis);
+
             DisplayManager.updateDisplay();
         }
+        guiRenderer.cleanUp();
         renderer.cleanUp();
         loader.cleanUp();
         DisplayManager.closeDisplay();
