@@ -8,8 +8,8 @@ import org.lwjgl.util.vector.Vector3f;
 
 public class TerrainShader extends ShaderProgram {
 
-    private static final String VERTEX_FILE = "src/com/melkerlarsson/shaders/terrainVertexShader.txt";
-    private static final String FRAGMENT_FILE = "src/com/melkerlarsson/shaders/terrainFragmentShader.txt";
+    private static final String VERTEX_FILE = "src/com/melkerlarsson/shaders/terrainVertexShader.glsl";
+    private static final String FRAGMENT_FILE = "src/com/melkerlarsson/shaders/terrainFragmentShader.glsl";
 
     private int location_transformationMatrix;
     private int location_projectionMatrix;

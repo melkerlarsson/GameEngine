@@ -1,7 +1,6 @@
-package com.melkerlarsson.gui;
+package com.melkerlarsson.gui1;
 
 import org.lwjgl.util.vector.Vector2f;
-import org.lwjgl.util.vector.Vector3f;
 
 public class GuiTexture {
 

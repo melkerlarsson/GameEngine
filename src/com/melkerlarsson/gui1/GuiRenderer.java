@@ -1,6 +1,5 @@
-package com.melkerlarsson.gui;
+package com.melkerlarsson.gui1;
 
-import com.melkerlarsson.gui.GuiTexture;
 import com.melkerlarsson.models.RawModel;
 import com.melkerlarsson.renderEngine.Loader;
 import com.melkerlarsson.toolBox.Maths;
