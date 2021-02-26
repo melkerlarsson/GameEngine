@@ -30,13 +30,16 @@ public class Main {
 
     public static void main(String[] args) {
 
+
         DisplayManager.createDisplay();
 
         Loader loader = new Loader();
 
-        ModelData treeData = OBJFileLoader.loadOBJ("lowPolyTree");
+        ModelData treeData = OBJFileLoader.loadOBJ("lowPolyTree3/LowPolyTree");
         RawModel treeModel = loader.loadToVAO(treeData.getVertices(), treeData.getTextureCoords(), treeData.getNormals(), treeData.getIndices());
-        ModelTexture treeTexture = new ModelTexture(loader.loadTexture("lowPolyTree"));
+        ModelTexture treeTexture = new ModelTexture(loader.loadTexture("lowPolyTree3/Texture2"));
+        treeTexture.setShineDamper(5);
+        treeTexture.setReflectivity(1.05f);
         TexturedModel tree = new TexturedModel(treeModel, treeTexture);
 
         ModelData grassData = OBJFileLoader.loadOBJ("grassModel");
@@ -54,8 +57,13 @@ public class Main {
         fernTextureAtlas.setNumberOfRows(2);
         TexturedModel fern = new TexturedModel(fernModel, fernTextureAtlas);
 
+        ModelData lampData = OBJFileLoader.loadOBJ("lamp");
+        RawModel lampModel = loader.loadToVAO(lampData.getVertices(), lampData.getTextureCoords(), lampData.getNormals(), lampData.getIndices());
+        ModelTexture lampTexture = new ModelTexture(loader.loadTexture("lamp"));
+        TexturedModel lamp = new TexturedModel(lampModel, lampTexture);
 
-        Light light = new Light(new Vector3f(20000, 40000, 20000), new Vector3f( 1f, 1f, 1f));
+
+
 
         TerrainTexture backgroundTexture = new TerrainTexture(loader.loadTexture("grassy2"));
         TerrainTexture rTexture = new TerrainTexture(loader.loadTexture("mud"));
@@ -70,13 +78,28 @@ public class Main {
 
         List<Entity> entities = new ArrayList<Entity>();
         Random random = new Random();
-        for(int i=0;i<400;i++){
 
+        List<Light> lights = new ArrayList<Light>();
+        lights.add(new Light(new Vector3f(Terrain.getSIZE() / 2, 40000, Terrain.getSIZE() / 2), new Vector3f( 1.5f, 1.5f, 1.5f)));
+        lights.add(new Light(new Vector3f(100, terrain.getHeightOfTerrain(100, -150) + 17, -150), new Vector3f( 2, 0, 0), new Vector3f(1, 0.01f, 0.002f)));
+        lights.add(new Light(new Vector3f(100, terrain.getHeightOfTerrain(100, -50) + 17, -50), new Vector3f( 0, 2, 2), new Vector3f(1, 0.01f, 0.002f)));
+        lights.add(new Light(new Vector3f(100, terrain.getHeightOfTerrain(100, 150) + 17, 150), new Vector3f( 2, 2, 0), new Vector3f(1f, 0.001f, 0.002f)));
+
+
+        entities.add(new Entity(lamp, new Vector3f(100, terrain.getHeightOfTerrain(100, -150), -150), 0, 0, 0, 1));
+        entities.add(new Entity(lamp, new Vector3f(100, terrain.getHeightOfTerrain(100, -50), -50), 0, 0, 0, 1));
+        entities.add(new Entity(lamp, new Vector3f(100, terrain.getHeightOfTerrain(100, 150), 150), 0, 0, 0, 1));
+
+        for(int i=0;i<400;i++){
+            float x = random.nextFloat() * terrainSize - terrainSize/2;
+            float z = random.nextFloat() * terrainSize - terrainSize/2;
+            float y = terrain.getHeightOfTerrain(x, z);
+            entities.add(new Entity(fern, new Vector3f(x, y, z), 0, 0, 0, 2));
             if (i % 20 == 0) {
-                float x = random.nextFloat() * terrainSize - terrainSize/2;
-                float z = random.nextFloat() * terrainSize - terrainSize/2;
-                float y = terrain.getHeightOfTerrain(x, z);
-                entities.add(new Entity(grass, new Vector3f(x, y, z), 0, 0, 0, 2));
+                x = random.nextFloat() * terrainSize - terrainSize/2;
+                z = random.nextFloat() * terrainSize - terrainSize/2;
+                y = terrain.getHeightOfTerrain(x, z);
+                entities.add(new Entity(fern, new Vector3f(x, y, z), 0, 0, 0, 2));
 
                 x = random.nextFloat() * terrainSize - terrainSize/2;
                 z = random.nextFloat() * terrainSize - terrainSize/2;
@@ -85,9 +108,9 @@ public class Main {
                 entities.add(new Entity(fern, random.nextInt(4), new Vector3f(x, y, z),0,0,0,2));
             }
             if (i % 5 == 0) {
-                float x = random.nextFloat() * terrainSize - terrainSize/2;
-                float z = random.nextFloat() * terrainSize - terrainSize/2;
-                float y = terrain.getHeightOfTerrain(x, z);
+                x = random.nextFloat() * terrainSize - terrainSize/2;
+                z = random.nextFloat() * terrainSize - terrainSize/2;
+                y = terrain.getHeightOfTerrain(x, z);
                 entities.add(new Entity(tree, new Vector3f(x, y, z),0,0,0,3));
 
             }
@@ -106,8 +129,11 @@ public class Main {
         Camera camera = new Camera(player);
 
         List<UiComponent> guis = new ArrayList<UiComponent>();
-        UiComponent gui = new UiComponent(new Vector2f(0.5f, 0.5f), new Vector2f(0.25f, 0.25f), UiColors.GREEN);
+        UiComponent gui = new UiComponent(new Vector2f(0.5f, 0.5f), new Vector2f(0.25f, 0.25f), UiColors.GREEN, 0.5f);
+        UiComponent gui2 = new UiComponent(new Vector2f(-0.5f, 0.5f), new Vector2f(0.25f, 0.25f), UiColors.GRAY, 0.95f);
+
         guis.add(gui);
+        guis.add(gui2);
 
         UiRenderer UiRenderer = new UiRenderer(loader);
 
@@ -122,8 +148,9 @@ public class Main {
                 renderer.processEntity(entity);
             }
 
-            renderer.render(light, camera);
-            UiRenderer.render(guis);
+            renderer.render(lights, camera);
+
+            //UiRenderer.render(guis);
 
             DisplayManager.updateDisplay();
         }

@@ -37,6 +37,8 @@ public class UiRenderer {
         for (UiComponent component : components) {
             Matrix4f matrix = Maths.createTransformationMatrix(component.getPosition(), component.getScale());
             shader.loadTransformationMatrix(matrix);
+            shader.loadColor(component.getColor());
+            shader.loadOpacity(component.getOpacity());
             GL11.glDrawArrays(GL11.GL_TRIANGLE_STRIP, 0, quad.getVertexCount());
 
         }

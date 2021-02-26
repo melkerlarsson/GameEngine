@@ -22,8 +22,8 @@ public class UiShader extends ShaderProgram {
         super.loadMatrix(location_transformationMatrix, matrix);
     }
 
-    public void loadColor(Vector3f color) {
-        super.loadVector(location_color, color);
+    public void loadColor(UiColor color) {
+        super.loadVector(location_color, color.getColorAs3dVector());
     }
 
     public void loadOpacity(float opacity) {

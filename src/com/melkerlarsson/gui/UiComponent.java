@@ -27,4 +27,8 @@ public class UiComponent {
     public Vector2f getScale() {
         return this.scale;
     }
+
+    public UiColor getColor() { return this.color; }
+
+    public float getOpacity() { return this.opacity; }
 }
